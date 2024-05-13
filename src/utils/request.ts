@@ -1,18 +1,23 @@
 import { message } from 'antd'
 import axios, { AxiosError } from 'axios'
+import { showLoading, hideLoading } from './loading/index'
 
 //创建实例
 const instance = axios.create({
-  baseURL: 'api',
+  baseURL: '/api',
   timeout: 8000,
   timeoutErrorMessage: '请求超时，请稍后重试',
   //默认跨域的
-  withCredentials: true
+  withCredentials: true,
+  headers: {
+    icode: '118C2CD1952E3BCF'
+  }
 })
 
 //请求拦截器
 instance.interceptors.request.use(
   config => {
+    showLoading()
     const token = localStorage.getItem('token')
     if (token) {
       config.headers.Authorization = 'Token::' + token
@@ -30,8 +35,9 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   response => {
     const data = response.data
+    hideLoading()
     if (data.code === 500001) {
-      message.error(data.message)
+      message.error(data.msg)
       localStorage.removeItem('token')
       location.href = '/login'
     } else if (data.code !== 0) {
@@ -41,16 +47,18 @@ instance.interceptors.response.use(
     return data.data
   },
   (error: AxiosError) => {
-    return Promise.reject(error)
+    hideLoading()
+    message.error(error.message)
+    return Promise.reject(error.message)
   }
 )
 
 //axios的请求封装
 export default {
   get(url: string, params: any) {
-    return axios.get(url, { params })
+    return instance.get(url, { params })
   },
   post(url: string, params: any) {
-    return axios.post(url, params)
+    return instance.post(url, params)
   }
 }
