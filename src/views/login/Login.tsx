@@ -1,10 +1,25 @@
 import styles from './index.module.less'
-import { Typography, Form, Button, Input } from 'antd'
+import { Typography, Form, Button, Input, App } from 'antd'
+import { login } from '@/api'
+import { LoginParams } from '@/types/api'
+import storage from '@/utils/storage'
+import { useNavigate } from 'react-router-dom'
 
 const { Title } = Typography
 
 export default function Login() {
-  const onFinish = () => {}
+  const { message, modal, notification } = App.useApp()
+  const nav = useNavigate()
+
+  const onFinish = async (values: LoginParams) => {
+    const data = await login(values)
+    console.log(data)
+    storage.set('token', data)
+    message.success('登录成功')
+    const params = new URLSearchParams(location.search)
+    console.log(params.get('callback'))
+    nav(params.get('callback') || '/')
+  }
 
   return (
     <div className={styles.login}>
@@ -20,14 +35,22 @@ export default function Login() {
           onFinish={onFinish}
           autoComplete='off'
         >
-          <Form.Item label='用户名' rules={[{ required: true, message: '请输入用户名!' }]}>
+          <Form.Item
+            name='userName'
+            label='用户名'
+            rules={[{ required: true, message: '请输入用户名!' }]}
+          >
             <Input placeholder='请输入用户名' />
           </Form.Item>
-          <Form.Item label='密码' rules={[{ required: true, message: '请输入密码!' }]}>
+          <Form.Item
+            name='userPwd'
+            label='密码'
+            rules={[{ required: true, message: '请输入密码!' }]}
+          >
             <Input.Password placeholder='请输入密码' />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type='primary' block>
+            <Button type='primary' block htmlType='submit'>
               登录
             </Button>
           </Form.Item>

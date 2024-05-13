@@ -1,19 +1,17 @@
-import { message } from 'antd'
+import { message } from '@/utils/AntdGlobal'
 import axios, { AxiosError } from 'axios'
 import { showLoading, hideLoading } from './loading/index'
 import storage from './storage'
 import env from '@/config/index'
+import { Result } from '@/types/api'
 
 //创建实例
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_BASE_API,
+  // baseURL: import.meta.env.VITE_BASE_API,
   timeout: 8000,
   timeoutErrorMessage: '请求超时，请稍后重试',
   //默认跨域的
-  withCredentials: true,
-  headers: {
-    icode: '118C2CD1952E3BCF'
-  }
+  withCredentials: true
 })
 
 //请求拦截器
@@ -24,6 +22,7 @@ instance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = 'Token::' + token
     }
+    config.headers.icode = '118C2CD1952E3BCF'
     if (env.mock) {
       config.baseURL = env.mockApi
     } else {
@@ -41,11 +40,11 @@ instance.interceptors.request.use(
 //响应拦截器
 instance.interceptors.response.use(
   response => {
-    const data = response.data
+    const data: Result = response.data
     hideLoading()
     if (data.code === 500001) {
       message.error(data.msg)
-      localStorage.removeItem('token')
+      storage.remove('token')
       // location.href = '/login'
     } else if (data.code !== 0) {
       message.error(data.msg)
