@@ -4,16 +4,19 @@ import { login } from '@/api'
 import { LoginParams } from '@/types/api'
 import storage from '@/utils/storage'
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
 const { Title } = Typography
 
 export default function Login() {
   const { message, modal, notification } = App.useApp()
   const nav = useNavigate()
+  const [loading, setLoading] = useState(false)
 
   const onFinish = async (values: LoginParams) => {
-    const data = await login(values)
-    console.log(data)
+    setLoading(true)
+    const data: any = await login(values)
+    setLoading(false)
     storage.set('token', data)
     message.success('登录成功')
     const params = new URLSearchParams(location.search)
@@ -50,7 +53,7 @@ export default function Login() {
             <Input.Password placeholder='请输入密码' />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type='primary' block htmlType='submit'>
+            <Button loading={loading} type='primary' block htmlType='submit'>
               登录
             </Button>
           </Form.Item>
