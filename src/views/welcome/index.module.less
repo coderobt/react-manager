@@ -1,0 +1,37 @@
+.welcome {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 5px;
+  height: calc(100vh - 150px);
+}
+
+.content {
+  position: relative;
+  bottom: 40px;
+  .subTitle{
+    font-size: 30px;
+    line-height: 42px;
+    color: black;
+  }
+  .title{
+    font-size: 40px;
+    line-height: 62px;
+    color: #ed6c00;
+  }
+  .desc{
+    text-align: center;
+    font-size: 14px;
+    color: gray;
+  }
+}
+
+.img{
+  background: url('/imgs/welcome-bg.png') no-repeat ;
+  //包含整张图片把图片完完整整显示出来
+  background-size: contain;
+  width: 370px;
+  height: 320px;
+  margin-left: 100px;
+}

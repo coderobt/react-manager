@@ -11,7 +11,10 @@ const instance = axios.create({
   timeout: 8000,
   timeoutErrorMessage: '请求超时，请稍后重试',
   //默认跨域的
-  withCredentials: true
+  withCredentials: true,
+  headers: {
+    icode: '118C2CD1952E3BCF'
+  }
 })
 
 //请求拦截器
@@ -22,7 +25,6 @@ instance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = 'Token::' + token
     }
-    config.headers.icode = '118C2CD1952E3BCF'
     if (env.mock) {
       config.baseURL = env.mockApi
     } else {
