@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "build:stg": "tsc && vite build --mode stag",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -12,6 +13,7 @@
   "dependencies": {
     "antd": "^5.17.0",
     "axios": "^1.6.8",
+    "dayjs": "^1.11.11",
     "less": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -1,10 +1,12 @@
 import { message } from 'antd'
 import axios, { AxiosError } from 'axios'
 import { showLoading, hideLoading } from './loading/index'
+import storage from './storage'
+import env from '@/config/index'
 
 //创建实例
 const instance = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_BASE_API,
   timeout: 8000,
   timeoutErrorMessage: '请求超时，请稍后重试',
   //默认跨域的
@@ -18,9 +20,14 @@ const instance = axios.create({
 instance.interceptors.request.use(
   config => {
     showLoading()
-    const token = localStorage.getItem('token')
+    const token = storage.get('token')
     if (token) {
       config.headers.Authorization = 'Token::' + token
+    }
+    if (env.mock) {
+      config.baseURL = env.mockApi
+    } else {
+      config.baseURL = env.baseApi
     }
     return {
       ...config
