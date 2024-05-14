@@ -7,14 +7,18 @@ export const useUserStore = create<{
     userEmail: string
     userName: string
   }
+  collapsed: boolean
   updateUserInfo: (userInfo: User.UserItem) => void
   updateToken: (token: string) => void
+  updateCollapsed: () => void
 }>(set => ({
   token: '',
   userInfo: {
     userEmail: '',
     userName: ''
   },
+  collapsed: false,
   updateUserInfo: (userInfo: User.UserItem) => set({ userInfo }),
-  updateToken: (token: string) => set({ token })
+  updateToken: (token: string) => set({ token }),
+  updateCollapsed: () => set(state => ({ collapsed: !state.collapsed }))
 }))

@@ -11,7 +11,7 @@ import { useUserStore } from '@/store'
 const { Content, Footer, Sider } = Layout
 
 const App: React.FC = () => {
-  const state = useUserStore()
+  const { updateUserInfo, collapsed } = useUserStore()
 
   useEffect(() => {
     getUserInfo()
@@ -19,13 +19,13 @@ const App: React.FC = () => {
 
   const getUserInfo = async () => {
     const data = await getUserInfoData()
-    state.updateUserInfo(data)
+    updateUserInfo(data)
   }
 
   return (
     <Watermark content='react'>
       <Layout>
-        <Sider>
+        <Sider collapsed={collapsed}>
           <Menu />
         </Sider>
         <Layout>
