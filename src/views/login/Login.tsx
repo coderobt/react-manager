@@ -2,9 +2,10 @@ import styles from './index.module.less'
 import { Typography, Form, Button, Input, App } from 'antd'
 import { login } from '@/api'
 import { LoginParams } from '@/types/api'
-import storage from '@/utils/storage'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { useUserStore } from '@/store'
+import storage from '@/utils/storage'
 
 const { Title } = Typography
 
@@ -12,16 +13,23 @@ export default function Login() {
   const { message, modal, notification } = App.useApp()
   const nav = useNavigate()
   const [loading, setLoading] = useState(false)
+  const state = useUserStore()
 
   const onFinish = async (values: LoginParams) => {
-    setLoading(true)
-    const data: any = await login(values)
-    setLoading(false)
-    storage.set('token', data)
-    message.success('登录成功')
-    const params = new URLSearchParams(location.search)
-    console.log(params.get('callback'))
-    nav(params.get('callback') || '/')
+    try {
+      setLoading(true)
+      const data: any = await login(values)
+      setLoading(false)
+      storage.set('token', data)
+      state.updateToken(data)
+      message.success('登录成功')
+      const params = new URLSearchParams(location.search)
+      setTimeout(() => {
+        nav(params.get('callback') || '/')
+      }, 1000)
+    } catch {
+      setLoading(false)
+    }
   }
 
   return (

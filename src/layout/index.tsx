@@ -4,10 +4,24 @@ import NavHeader from '@/components/NavHeader'
 import Menu from '@/components/Menu'
 import { Outlet } from 'react-router-dom'
 import styles from './index.module.less'
+import { getUserInfoData } from '@/api'
+import { useEffect } from 'react'
+import { useUserStore } from '@/store'
 
 const { Content, Footer, Sider } = Layout
 
 const App: React.FC = () => {
+  const state = useUserStore()
+
+  useEffect(() => {
+    getUserInfo()
+  }, [])
+
+  const getUserInfo = async () => {
+    const data = await getUserInfoData()
+    state.updateUserInfo(data)
+  }
+
   return (
     <Watermark content='react'>
       <Layout>

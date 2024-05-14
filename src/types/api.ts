@@ -10,3 +10,21 @@ export interface LoginParams {
   userName: string
   userPwd: string
 }
+
+export namespace User {
+  export interface UserItem {
+    _id: string
+    userId: number
+    userName: string
+    userEmail: string
+    mobile?: string
+    deptId: string
+    deptName?: string
+    job?: string
+    state: number
+    role: number
+    roleList: string
+    createId: number
+    userImg: string
+  }
+}
