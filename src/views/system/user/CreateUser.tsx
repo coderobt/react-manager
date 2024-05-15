@@ -1,7 +1,14 @@
-import { Modal, Form, Input, Upload, Select } from 'antd'
+import { Modal, Form, Input, Upload, Select, Space } from 'antd'
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
+import { useState } from 'react'
+import storage from '@/utils/storage'
+import { RcFile, UploadFile, UploadProps } from 'antd/es/upload'
+import { message } from '@/utils/AntdGlobal'
 
 const CreateUser = () => {
   const [form] = Form.useForm()
+  const [img, setImg] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async () => {
     const valid = await form.validateFields()
@@ -10,6 +17,38 @@ const CreateUser = () => {
 
   const handleCancel = () => {}
 
+  //上传之前接口处理
+  const beforeUpload = (file: RcFile) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+    if (!isJpgOrPng) {
+      message.error('只能上传 JPG/PNG 格式图片!')
+    }
+    const isLt500K = file.size / 1024 / 1024 < 0.5
+    if (!isLt500K) {
+      message.error('图片不能超过500K!')
+    }
+    return isJpgOrPng && isLt500K
+  }
+
+  //上传后图片处理
+  const handleChange: UploadProps['onChange'] = info => {
+    if (info.file.status === 'uploading') {
+      setLoading(true)
+      return
+    }
+
+    if (info.file.status === 'done') {
+      const { code, data, msg } = info.file.response
+      setLoading(false)
+      if (code === 0) {
+        setImg(data.file)
+      } else {
+        message.error(msg)
+      }
+    } else if (info.file.status === 'error') {
+      message.error('服务器异常，请稍后重试')
+    }
+  }
   return (
     <Modal
       title='创建用户'
@@ -54,7 +93,28 @@ const CreateUser = () => {
         <Form.Item label='系统角色' name='role'>
           <Input placeholder='请输入角色' />
         </Form.Item>
-        <Form.Item label='用户头像' name='userImg'></Form.Item>
+        <Form.Item label='用户头像'>
+          <Upload
+            headers={{
+              Authorization: 'Bearer ' + storage.get('token'),
+              icode: '118C2CD1952E3BCF'
+            }}
+            showUploadList={false}
+            listType='picture-card'
+            action='/api/users/upload'
+            beforeUpload={beforeUpload}
+            onChange={handleChange}
+          >
+            {img ? (
+              <img src={img} style={{ width: '100%' }} />
+            ) : (
+              <Space direction='vertical'>
+                {loading ? <LoadingOutlined /> : <PlusOutlined />}
+                <div>上传头像</div>
+              </Space>
+            )}
+          </Upload>
+        </Form.Item>
       </Form>
     </Modal>
   )
