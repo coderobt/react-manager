@@ -1,21 +1,53 @@
 import { Modal, Form, Input, Upload, Select, Space } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import { useState } from 'react'
+import { useImperativeHandle, useState } from 'react'
 import storage from '@/utils/storage'
 import { RcFile, UploadFile, UploadProps } from 'antd/es/upload'
 import { message } from '@/utils/AntdGlobal'
+import { IModalProp, IAction } from '@/types/modal'
+import { User } from '@/types/api'
+import { createUserAPI } from '@/api/index'
 
-const CreateUser = () => {
+const CreateUser = (props: IModalProp) => {
   const [form] = Form.useForm()
   const [img, setImg] = useState('')
+  const [visible, setVisible] = useState(false)
+  const [action, setAction] = useState<IAction>('create')
   const [loading, setLoading] = useState(false)
+
+  //暴露子组件的open方法
+  useImperativeHandle(props.mRef, () => {
+    return {
+      open
+    }
+  })
+
+  //调用弹框显示方法
+  const open = (type: IAction, data?: User.UserItem) => {
+    setAction(type)
+    setVisible(true)
+  }
 
   const handleSubmit = async () => {
     const valid = await form.validateFields()
-    console.log(valid)
+    if (valid) {
+      const params = {
+        ...form.getFieldsValue(),
+        userImg: img
+      }
+      if (action === 'create') {
+        const data = await createUserAPI(params)
+        message.success('创建成功')
+        handleCancel()
+        props.update()
+      }
+    }
   }
 
-  const handleCancel = () => {}
+  const handleCancel = () => {
+    setVisible(false)
+    form.resetFields()
+  }
 
   //上传之前接口处理
   const beforeUpload = (file: RcFile) => {
@@ -55,7 +87,7 @@ const CreateUser = () => {
       okText='确定'
       cancelText='取消'
       width={800}
-      open={true}
+      open={visible}
       onOk={handleSubmit}
       onCancel={handleCancel}
     >
@@ -77,7 +109,7 @@ const CreateUser = () => {
         <Form.Item label='手机号' name='mobile'>
           <Input type='number' placeholder='请输入手机号' />
         </Form.Item>
-        <Form.Item label='部门' name='deptId' rules={[{ required: true, message: '部门不能为空' }]}>
+        <Form.Item label='部门' name='deptId'>
           <Input type='number' placeholder='请输入部门' />
         </Form.Item>
         <Form.Item label='岗位' name='job'>
@@ -100,13 +132,13 @@ const CreateUser = () => {
               icode: '118C2CD1952E3BCF'
             }}
             showUploadList={false}
-            listType='picture-card'
+            listType='picture-circle'
             action='/api/users/upload'
             beforeUpload={beforeUpload}
             onChange={handleChange}
           >
             {img ? (
-              <img src={img} style={{ width: '100%' }} />
+              <img src={img} style={{ width: '100%', borderRadius: '100%' }} />
             ) : (
               <Space direction='vertical'>
                 {loading ? <LoadingOutlined /> : <PlusOutlined />}

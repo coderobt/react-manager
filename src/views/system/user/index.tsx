@@ -1,15 +1,17 @@
 import { User, PageParams } from '@/types/api'
 import { Button, Table, Form, Input, Select, Space } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getUserList } from '@/api'
 import dayjs from 'dayjs'
 import CreateUser from './CreateUser'
+import { IAction } from '@/types/modal'
 
 export default function UserList() {
   const [data, setData] = useState<User.UserItem[]>([])
   const [form] = Form.useForm()
   const [total, setTotal] = useState(0)
+  const userRef = useRef<{ open: (type: IAction, data?: User.UserItem) => void | undefined }>()
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10
@@ -131,6 +133,11 @@ export default function UserList() {
     form.resetFields()
   }
 
+  //创建用户
+  const handleCreate = () => {
+    userRef.current?.open('create')
+  }
+
   return (
     <div className='user-list'>
       <Form form={form} className='search-form' layout='inline' initialValues={{ state: 0 }}>
@@ -163,7 +170,9 @@ export default function UserList() {
         <div className='header-wrapper'>
           <div className='title'>用户列表</div>
           <div className='action'>
-            <Button type='primary'>新增</Button>
+            <Button type='primary' onClick={handleCreate}>
+              新增
+            </Button>
             <Button type='primary' danger>
               批量删除
             </Button>
@@ -195,7 +204,15 @@ export default function UserList() {
           }}
         />
       </div>
-      <CreateUser />
+      <CreateUser
+        mRef={userRef}
+        update={() =>
+          getUserListData({
+            pageNum: 1,
+            pageSize: pagination.pageSize
+          })
+        }
+      />
     </div>
   )
 }

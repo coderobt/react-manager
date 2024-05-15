@@ -39,3 +39,8 @@ export const getRadarData = () => {
 export const getUserList = (params: User.Params) => {
   return request.get<ResultData<User.UserItem>>('/users/list', params)
 }
+
+//创建用户
+export const createUserAPI = (params: User.CreateParam) => {
+  return request.post('/users/create', params)
+}
