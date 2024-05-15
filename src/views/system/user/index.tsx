@@ -1,20 +1,48 @@
-import { User } from '@/types/api'
+import { User, PageParams } from '@/types/api'
 import { Button, Table, Form, Input, Select, Space } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { useEffect, useState } from 'react'
 import { getUserList } from '@/api'
 import dayjs from 'dayjs'
+import CreateUser from './CreateUser'
 
 export default function UserList() {
   const [data, setData] = useState<User.UserItem[]>([])
+  const [form] = Form.useForm()
+  const [total, setTotal] = useState(0)
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10
+  })
 
   useEffect(() => {
-    getUserListData()
-  }, [])
+    getUserListData({
+      pageNum: pagination.current,
+      pageSize: pagination.pageSize
+    })
+  }, [pagination.current, pagination.pageSize])
 
-  const getUserListData = async () => {
-    const data = await getUserList()
-    setData(data.list)
+  //获取用户列表
+  const getUserListData = async (params: PageParams) => {
+    const values = form.getFieldsValue()
+    const data = await getUserList({
+      ...values,
+      pageNum: params.pageNum,
+      pageSize: params.pageSize
+    })
+    const list = Array.from({ length: 50 })
+      .fill({})
+      .map((item: any) => {
+        item = { ...data.list[0] }
+        item.userId = Math.random()
+        return item
+      })
+    setData(list)
+    setTotal(list.length)
+    setPagination({
+      current: data.page.pageNum,
+      pageSize: data.page.pageSize
+    })
   }
 
   const columns: ColumnsType<User.UserItem> = [
@@ -87,9 +115,25 @@ export default function UserList() {
       }
     }
   ]
+
+  //搜索
+  const handleSearch = () => {
+    const values = form.getFieldsValue()
+    getUserList({
+      ...values,
+      pageNum: 1,
+      pageSize: pagination.pageSize
+    })
+  }
+
+  //重置表单
+  const handleReset = () => {
+    form.resetFields()
+  }
+
   return (
     <div className='user-list'>
-      <Form className='search-form' layout='inline' initialValues={{ state: 0 }}>
+      <Form form={form} className='search-form' layout='inline' initialValues={{ state: 0 }}>
         <Form.Item label='用户ID' name='userName'>
           <Input placeholder='请输入用户ID' />
         </Form.Item>
@@ -100,14 +144,18 @@ export default function UserList() {
           <Select style={{ width: '120px' }}>
             <Select.Option value={0}>所有</Select.Option>
             <Select.Option value={1}>在职</Select.Option>
-            <Select.Option value={2}>试用期</Select.Option>
-            <Select.Option value={3}>离职</Select.Option>
+            <Select.Option value={2}>离职</Select.Option>
+            <Select.Option value={3}>试用期</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item>
           <Space>
-            <Button type='primary'>搜素</Button>
-            <Button type='primary'>重置</Button>
+            <Button type='primary' onClick={handleSearch}>
+              搜素
+            </Button>
+            <Button type='primary' onClick={handleReset}>
+              重置
+            </Button>
           </Space>
         </Form.Item>
       </Form>
@@ -121,8 +169,33 @@ export default function UserList() {
             </Button>
           </div>
         </div>
-        <Table rowSelection={{ type: 'checkbox' }} bordered dataSource={data} columns={columns} />
+        <Table
+          rowKey='userId'
+          rowSelection={{ type: 'checkbox' }}
+          bordered
+          dataSource={data}
+          columns={columns}
+          pagination={{
+            position: ['bottomRight'],
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            defaultCurrent: 1,
+            total: total,
+            showQuickJumper: true,
+            showSizeChanger: true,
+            showTotal: function (total) {
+              return `共${total}条`
+            },
+            onChange: (page, pageSize) => {
+              setPagination({
+                current: page,
+                pageSize
+              })
+            }
+          }}
+        />
       </div>
+      <CreateUser />
     </div>
   )
 }

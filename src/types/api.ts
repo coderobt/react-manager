@@ -15,13 +15,18 @@ export interface ResultData<T = any> {
   }
 }
 
+export interface PageParams {
+  pageNum: number
+  pageSize: number
+}
+
 export interface LoginParams {
   userName: string
   userPwd: string
 }
 
 export namespace User {
-  export interface Params {
+  export interface Params extends PageParams {
     userId?: string
     userName?: string
     state?: number

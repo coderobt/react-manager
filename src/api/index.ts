@@ -36,6 +36,6 @@ export const getRadarData = () => {
 }
 
 //获取用户列表
-export const getUserList = () => {
-  return request.get<ResultData<User.UserItem>>('/users/list')
+export const getUserList = (params: User.Params) => {
+  return request.get<ResultData<User.UserItem>>('/users/list', params)
 }
