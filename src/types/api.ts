@@ -28,3 +28,12 @@ export namespace User {
     userImg: string
   }
 }
+
+export namespace Dashboard {
+  export interface ReportData {
+    driverCount: number
+    totalMoney: number
+    orderCount: number
+    cityNum: number
+  }
+}

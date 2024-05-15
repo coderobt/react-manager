@@ -1,10 +1,16 @@
 import { Descriptions, Card, Button } from 'antd'
 import styles from './index.module.less'
 import * as echarts from 'echarts'
-import { useEffect } from 'react'
-import { text } from 'stream/consumers'
+import { useEffect, useState } from 'react'
+import { useUserStore } from '@/store'
+import { getReportData } from '@/api'
+import { Dashboard } from '@/types/api'
+import { formatMoney, formatNumber, formatState } from '@/utils'
 
 const DashBoard = () => {
+  const userInfo = useUserStore(state => state.userInfo)
+  const [report, setReport] = useState<Dashboard.ReportData>()
+
   useEffect(() => {
     const lineChartDom = document.getElementById('lineChart')
     const chartInstance = echarts.init(lineChartDom as HTMLElement)
@@ -159,38 +165,44 @@ const DashBoard = () => {
     })
   }, [])
 
+  const getReport = async () => {
+    const data = await getReportData()
+    setReport(data)
+  }
+
+  useEffect(() => {
+    getReport()
+  }, [])
+
   return (
     <div className={styles.dashboard}>
       <div className={styles['user-info']}>
-        <img
-          className={styles.userImg}
-          src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-        />
+        <img className={styles.userImg} src={userInfo.userImg} />
         <Descriptions title='欢迎新同学，每天都要开心！'>
-          <Descriptions.Item label='用户ID'>10001</Descriptions.Item>
-          <Descriptions.Item label='邮箱'>yinwt1018@mail.com</Descriptions.Item>
-          <Descriptions.Item label='状态'>在职</Descriptions.Item>
-          <Descriptions.Item label='手机号'>13720226276</Descriptions.Item>
-          <Descriptions.Item label='岗位'>前端工程师</Descriptions.Item>
-          <Descriptions.Item label='部门'>大前端</Descriptions.Item>
+          <Descriptions.Item label='用户ID'>{userInfo.userId}</Descriptions.Item>
+          <Descriptions.Item label='邮箱'>{userInfo.userEmail}</Descriptions.Item>
+          <Descriptions.Item label='状态'>{formatState(userInfo.state)}</Descriptions.Item>
+          <Descriptions.Item label='手机号'>{userInfo.mobile}</Descriptions.Item>
+          <Descriptions.Item label='岗位'>{userInfo.job}</Descriptions.Item>
+          <Descriptions.Item label='部门'>{userInfo.deptName}</Descriptions.Item>
         </Descriptions>
       </div>
       <div className={styles.report}>
         <div className={styles.card}>
           <div className='title'>司机数量</div>
-          <div className={styles.data}>100个</div>
+          <div className={styles.data}>{formatNumber(report?.driverCount)}个</div>
         </div>
         <div className={styles.card}>
           <div className='title'>总流水</div>
-          <div className={styles.data}>10000元</div>
+          <div className={styles.data}>{formatMoney(report?.totalMoney)}元</div>
         </div>
         <div className={styles.card}>
           <div className='title'>总订单</div>
-          <div className={styles.data}>2000单</div>
+          <div className={styles.data}>{formatNumber(report?.orderCount)}单</div>
         </div>
         <div className={styles.card}>
           <div className='title'>开通城市</div>
-          <div className={styles.data}>50座</div>
+          <div className={styles.data}>{formatNumber(report?.cityNum)}座</div>
         </div>
       </div>
       <div className={styles.chart}>
