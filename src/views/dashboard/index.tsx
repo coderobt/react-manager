@@ -152,6 +152,11 @@ const DashBoard = () => {
     })
   }
 
+  const handleRefresh = () => {
+    renderPirChart1()
+    renderPirChart2()
+  }
+
   const getReport = async () => {
     const data = await getReportData()
     setReport(data)
@@ -193,12 +198,26 @@ const DashBoard = () => {
         </div>
       </div>
       <div className={styles.chart}>
-        <Card title='订单和流水走势图' extra={<Button type='primary'>刷新</Button>}>
+        <Card
+          title='订单和流水走势图'
+          extra={
+            <Button onClick={renderLineChart} type='primary'>
+              刷新
+            </Button>
+          }
+        >
           <div ref={lineRef} className={styles.itemChart}></div>
         </Card>
       </div>
       <div className={styles.chart}>
-        <Card title='司机分布' extra={<Button type='primary'>刷新</Button>}>
+        <Card
+          title='司机分布'
+          extra={
+            <Button onClick={handleRefresh} type='primary'>
+              刷新
+            </Button>
+          }
+        >
           <div className={styles.pieChart}>
             <div ref={pieRef1} className={styles.itemPie}></div>
             <div ref={pieRef2} className={styles.itemPie}></div>
@@ -206,7 +225,14 @@ const DashBoard = () => {
         </Card>
       </div>
       <div className={styles.chart}>
-        <Card title='模型诊断' extra={<Button type='primary'>刷新</Button>}>
+        <Card
+          title='模型诊断'
+          extra={
+            <Button onClick={renderRadarChart} type='primary'>
+              刷新
+            </Button>
+          }
+        >
           <div ref={radarRef} className={styles.itemChart}></div>
         </Card>
       </div>
