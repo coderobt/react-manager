@@ -6,7 +6,7 @@ import { RcFile, UploadFile, UploadProps } from 'antd/es/upload'
 import { message } from '@/utils/AntdGlobal'
 import { IModalProp, IAction } from '@/types/modal'
 import { User } from '@/types/api'
-import { createUserAPI } from '@/api/index'
+import { createUserAPI, editUserAPI } from '@/api/index'
 
 const CreateUser = (props: IModalProp) => {
   const [form] = Form.useForm()
@@ -26,6 +26,10 @@ const CreateUser = (props: IModalProp) => {
   const open = (type: IAction, data?: User.UserItem) => {
     setAction(type)
     setVisible(true)
+    if (action === 'edit' && data) {
+      form.setFieldsValue(data)
+      setImg(data.userImg)
+    }
   }
 
   const handleSubmit = async () => {
@@ -36,11 +40,14 @@ const CreateUser = (props: IModalProp) => {
         userImg: img
       }
       if (action === 'create') {
-        const data = await createUserAPI(params)
+        await createUserAPI(params)
         message.success('创建成功')
-        handleCancel()
-        props.update()
+      } else {
+        await editUserAPI(params)
+        message.success('修改成功')
       }
+      handleCancel()
+      props.update()
     }
   }
 
@@ -92,6 +99,9 @@ const CreateUser = (props: IModalProp) => {
       onCancel={handleCancel}
     >
       <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
+        <Form.Item name='userId' hidden>
+          <Input />
+        </Form.Item>
         <Form.Item
           label='用户名'
           name='userName'

@@ -44,3 +44,8 @@ export const getUserList = (params: User.Params) => {
 export const createUserAPI = (params: User.CreateParam) => {
   return request.post('/users/create', params)
 }
+
+//编辑用户
+export const editUserAPI = (params: User.EditParam) => {
+  return request.post('/users/edit', params)
+}

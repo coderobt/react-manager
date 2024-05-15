@@ -58,6 +58,10 @@ export namespace User {
     roleList: string[]
     userImg: string
   }
+
+  export interface EditParam extends CreateParam {
+    userId: number
+  }
 }
 
 export namespace Dashboard {
