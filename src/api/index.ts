@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { LoginParams, User, Dashboard } from '@/types/api'
+import { LoginParams, User, Dashboard, ResultData } from '@/types/api'
 
 //登录
 export const login = (params: LoginParams) => {
@@ -33,4 +33,9 @@ export const getPieAgeData = () => {
 //获取雷达图
 export const getRadarData = () => {
   return request.get<Dashboard.RadarData>('/order/dashboard/getRadarData')
+}
+
+//获取用户列表
+export const getUserList = () => {
+  return request.get<ResultData<User.UserItem>>('/users/list')
 }

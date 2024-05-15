@@ -22,5 +22,5 @@ export function formatNumber(num?: number | string) {
 export const formatState = (state: number) => {
   if (state === 1) return '在职'
   if (state === 2) return '试用期'
-  if (state === 4) return '离职'
+  if (state === 3) return '离职'
 }

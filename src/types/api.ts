@@ -6,12 +6,27 @@ export interface Result<T = any> {
   msg: string
 }
 
+export interface ResultData<T = any> {
+  list: T[]
+  page: {
+    pageNum: number
+    pageSize: number
+    total: number | 0
+  }
+}
+
 export interface LoginParams {
   userName: string
   userPwd: string
 }
 
 export namespace User {
+  export interface Params {
+    userId?: string
+    userName?: string
+    state?: number
+  }
+
   export interface UserItem {
     _id: string
     userId: number
