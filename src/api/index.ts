@@ -49,3 +49,8 @@ export const createUserAPI = (params: User.CreateParam) => {
 export const editUserAPI = (params: User.EditParam) => {
   return request.post('/users/edit', params)
 }
+
+//删除和批量删除用户
+export const delUserAPI = (params: { userIds: number[] }) => {
+  return request.post('/users/delete', params)
+}
