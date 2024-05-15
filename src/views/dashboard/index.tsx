@@ -1,20 +1,25 @@
 import { Descriptions, Card, Button } from 'antd'
 import styles from './index.module.less'
-import * as echarts from 'echarts'
 import { useEffect, useState } from 'react'
 import { useUserStore } from '@/store'
 import { getReportData } from '@/api'
 import { Dashboard } from '@/types/api'
 import { formatMoney, formatNumber, formatState } from '@/utils'
+import { useCharts } from '@/hook/useCharts'
 
 const DashBoard = () => {
   const userInfo = useUserStore(state => state.userInfo)
   const [report, setReport] = useState<Dashboard.ReportData>()
 
+  //初始化折线图
+  const [lineRef, lineChart] = useCharts()
+  //初始化折线图
+  const [pieRef1, pieChart1] = useCharts()
+  const [pieRef2, pieChart2] = useCharts()
+  //初始化折线图
+  const [radarRef, radarChart] = useCharts()
   useEffect(() => {
-    const lineChartDom = document.getElementById('lineChart')
-    const chartInstance = echarts.init(lineChartDom as HTMLElement)
-    chartInstance.setOption({
+    lineChart?.setOption({
       tooltip: {
         trigger: 'axis'
       },
@@ -60,9 +65,7 @@ const DashBoard = () => {
       ]
     })
 
-    const pieChartCityDom = document.getElementById('pieChartCity')
-    const pieChartCityInstance = echarts.init(pieChartCityDom as HTMLElement)
-    pieChartCityInstance.setOption({
+    pieChart1?.setOption({
       title: {
         text: '司机城市分布',
         left: 'center'
@@ -97,9 +100,7 @@ const DashBoard = () => {
       ]
     })
 
-    const pieChartAgeDom = document.getElementById('pieChartAge')
-    const pieChartAgeInstance = echarts.init(pieChartAgeDom as HTMLElement)
-    pieChartAgeInstance.setOption({
+    pieChart2?.setOption({
       title: {
         text: '司机年龄分布',
         left: 'center'
@@ -135,9 +136,7 @@ const DashBoard = () => {
       ]
     })
 
-    const radarChartDom = document.getElementById('radarChart')
-    const radarChartInstance = echarts.init(radarChartDom as HTMLElement)
-    radarChartInstance.setOption({
+    radarChart?.setOption({
       legend: {
         data: ['司机模型诊断']
       },
@@ -163,7 +162,7 @@ const DashBoard = () => {
         }
       ]
     })
-  }, [])
+  }, [lineChart, pieChart1, pieChart2, radarChart])
 
   const getReport = async () => {
     const data = await getReportData()
@@ -207,20 +206,20 @@ const DashBoard = () => {
       </div>
       <div className={styles.chart}>
         <Card title='订单和流水走势图' extra={<Button type='primary'>刷新</Button>}>
-          <div id='lineChart' className={styles.itemChart}></div>
+          <div ref={lineRef} className={styles.itemChart}></div>
         </Card>
       </div>
       <div className={styles.chart}>
         <Card title='司机分布' extra={<Button type='primary'>刷新</Button>}>
           <div className={styles.pieChart}>
-            <div id='pieChartCity' className={styles.itemPie}></div>
-            <div id='pieChartAge' className={styles.itemPie}></div>
+            <div ref={pieRef1} className={styles.itemPie}></div>
+            <div ref={pieRef2} className={styles.itemPie}></div>
           </div>
         </Card>
       </div>
       <div className={styles.chart}>
         <Card title='模型诊断' extra={<Button type='primary'>刷新</Button>}>
-          <div id='radarChart' className={styles.itemChart}></div>
+          <div ref={radarRef} className={styles.itemChart}></div>
         </Card>
       </div>
     </div>
