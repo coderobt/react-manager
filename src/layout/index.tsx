@@ -30,15 +30,13 @@ const App: React.FC = () => {
         </Sider>
         <Layout>
           <NavHeader />
-          <Content className={styles.content}>
-            {/* 二级路由出口 */}
-            <div className={styles.wrapper}>
-              <Outlet />
-            </div>
-            <Footer style={{ textAlign: 'center', height: '60px' }}>
-              Ant Design ©{new Date().getFullYear()} Created by Ant UED
-            </Footer>
-          </Content>
+          {/* 二级路由出口 */}
+          <div className={styles.wrapper}>
+            <Outlet />
+          </div>
+          <Footer style={{ textAlign: 'center', height: '60px' }}>
+            Ant Design ©{new Date().getFullYear()} Created by Ant UED
+          </Footer>
         </Layout>
       </Layout>
     </Watermark>
