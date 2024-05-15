@@ -2,7 +2,7 @@ import { Descriptions, Card, Button } from 'antd'
 import styles from './index.module.less'
 import { useEffect, useState } from 'react'
 import { useUserStore } from '@/store'
-import { getReportData } from '@/api'
+import { getReportData, getLineData, getPieCityData, getPieAgeData, getRadarData } from '@/api'
 import { Dashboard } from '@/types/api'
 import { formatMoney, formatNumber, formatState } from '@/utils'
 import { useCharts } from '@/hook/useCharts'
@@ -19,6 +19,16 @@ const DashBoard = () => {
   //初始化折线图
   const [radarRef, radarChart] = useCharts()
   useEffect(() => {
+    renderLineChart()
+    renderPirChart1()
+    renderPirChart2()
+    renderRadarChart()
+  }, [lineChart, pieChart1, pieChart2, radarChart])
+
+  //加载折线图数据
+  const renderLineChart = async () => {
+    if (!lineChart) return
+    const data = await getLineData()
     lineChart?.setOption({
       tooltip: {
         trigger: 'axis'
@@ -33,20 +43,7 @@ const DashBoard = () => {
         containLabel: true
       },
       xAxis: {
-        data: [
-          '7月',
-          '8月',
-          '9月',
-          '10月',
-          '11月',
-          '12月',
-          '1月',
-          '2月',
-          '3月',
-          '4月',
-          '5月',
-          '6月'
-        ]
+        data: data.label
       },
       yAxis: {
         type: 'value'
@@ -55,16 +52,21 @@ const DashBoard = () => {
         {
           name: '订单',
           type: 'line',
-          data: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]
+          data: data.order
         },
         {
           name: '流水',
           type: 'line',
-          data: [1000, 2000, 3000, 5000, 600, 800, 2000, 3200, 1100, 1200, 6000]
+          data: data.money
         }
       ]
     })
+  }
 
+  //加载饼图数据
+  const renderPirChart1 = async () => {
+    if (!pieChart1) return
+    const data = await getPieCityData()
     pieChart1?.setOption({
       title: {
         text: '司机城市分布',
@@ -82,13 +84,7 @@ const DashBoard = () => {
           name: '城市分布',
           type: 'pie',
           radius: '50%',
-          data: [
-            { value: 1048, name: '北京' },
-            { value: 735, name: '上海' },
-            { value: 580, name: '广州' },
-            { value: 484, name: '杭州' },
-            { value: 300, name: '武汉' }
-          ],
+          data,
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
@@ -99,7 +95,11 @@ const DashBoard = () => {
         }
       ]
     })
+  }
 
+  const renderPirChart2 = async () => {
+    if (!pieChart2) return
+    const data = await getPieAgeData()
     pieChart2?.setOption({
       title: {
         text: '司机年龄分布',
@@ -118,13 +118,7 @@ const DashBoard = () => {
           type: 'pie',
           radius: [50, 180],
           roseType: 'area',
-          data: [
-            { value: 30, name: '北京' },
-            { value: 40, name: '上海' },
-            { value: 60, name: '广州' },
-            { value: 20, name: '杭州' },
-            { value: 35, name: '武汉' }
-          ],
+          data,
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
@@ -135,34 +129,28 @@ const DashBoard = () => {
         }
       ]
     })
+  }
 
+  //加载雷达图数据
+  const renderRadarChart = async () => {
+    if (!radarChart) return
+    const data = await getRadarData()
     radarChart?.setOption({
       legend: {
         data: ['司机模型诊断']
       },
       radar: {
-        indicator: [
-          { name: '服务态度', max: 10 },
-          { name: '在线时长', max: 600 },
-          { name: '接单率', max: 100 },
-          { name: '评分', max: 5 },
-          { name: '关注度', max: 10000 }
-        ]
+        indicator: data.indicator
       },
       series: [
         {
           name: '模型诊断',
           type: 'radar',
-          data: [
-            {
-              value: [8, 300, 80, 4, 9000],
-              name: '司机模型诊断'
-            }
-          ]
+          data: data.data
         }
       ]
     })
-  }, [lineChart, pieChart1, pieChart2, radarChart])
+  }
 
   const getReport = async () => {
     const data = await getReportData()

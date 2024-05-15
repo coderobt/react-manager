@@ -13,5 +13,24 @@ export const getUserInfoData = () => {
 
 // 获取工作台报表
 export const getReportData = () => {
-  return request.get<Dashboard.ReportData>('/order/dashboard/getReportData')
+  return request.get<Dashboard.ReportData>('/order/dashboard/getLineData')
+}
+
+// 获取折线图
+export const getLineData = () => {
+  return request.get<Dashboard.lineData>('/order/dashboard/getLineData')
+}
+
+export const getPieCityData = () => {
+  return request.get<Dashboard.PieData[]>('/order/dashboard/getPieCityData')
+}
+
+//获取饼图
+export const getPieAgeData = () => {
+  return request.get<Dashboard.PieData[]>('/order/dashboard/getPieAgeData')
+}
+
+//获取雷达图
+export const getRadarData = () => {
+  return request.get<Dashboard.RadarData>('/order/dashboard/getRadarData')
 }
