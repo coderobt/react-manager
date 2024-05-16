@@ -56,6 +56,26 @@ export const delUserAPI = (params: { userIds: number[] }) => {
 }
 
 //部门列表
-export const getDeptListAPI = (params: Dept.Params) => {
+export const getDeptListAPI = (params?: Dept.Params) => {
   return request.get<Dept.DeptItem[]>('/dept/list', params)
+}
+
+//获取当前账号下的所有用户
+export const getAllUserListAPI = () => {
+  return request.get<User.UserItem[]>('/users/all/list')
+}
+
+//创建部门
+export const createDeptAPI = (params: Dept.CreateParams) => {
+  return request.post('dept/create', params)
+}
+
+//修改部门
+export const editDeptAPI = (params: Dept.EditParams) => {
+  return request.post('dept/edit', params)
+}
+
+//删除部门
+export const deleteDeptAPI = (params: Dept.DelParams) => {
+  return request.post('dept/delete', params)
 }
