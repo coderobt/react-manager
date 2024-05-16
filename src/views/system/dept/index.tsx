@@ -3,6 +3,7 @@ import { Form, Input, Button, Space, Table } from 'antd'
 import { useEffect, useState } from 'react'
 import { getDeptListAPI } from '@/api/index'
 import { Dept } from '@/types/api'
+import CreateDept from './CreateDept'
 
 const DeptList = () => {
   const [form] = Form.useForm()
@@ -87,6 +88,7 @@ const DeptList = () => {
         </div>
         <Table bordered rowKey='_id' columns={columns} dataSource={data} pagination={false} />
       </div>
+      <CreateDept />
     </div>
   )
 }
