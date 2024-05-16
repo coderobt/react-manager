@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { LoginParams, User, Dashboard, ResultData } from '@/types/api'
+import { LoginParams, User, Dashboard, ResultData, Dept } from '@/types/api'
 
 //登录
 export const login = (params: LoginParams) => {
@@ -53,4 +53,9 @@ export const editUserAPI = (params: User.EditParam) => {
 //删除和批量删除用户
 export const delUserAPI = (params: { userIds: number[] }) => {
   return request.post('/users/delete', params)
+}
+
+//部门列表
+export const getDeptListAPI = (params: Dept.Params) => {
+  return request.get<Dept.DeptItem[]>('/dept/list', params)
 }

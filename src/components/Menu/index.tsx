@@ -14,7 +14,7 @@ const SideMenu = () => {
   const items = [
     {
       label: '工作台',
-      key: '1',
+      key: '/dashboard',
       icon: <DesktopOutlined />
     },
     {
@@ -25,6 +25,11 @@ const SideMenu = () => {
         {
           label: '用户管理',
           key: '3',
+          icon: <TeamOutlined />
+        },
+        {
+          label: '部门管理',
+          key: '4',
           icon: <TeamOutlined />
         }
       ]

@@ -35,10 +35,10 @@ const NavHeader = () => {
 
   return (
     <div className={styles.NavHeader}>
-      <div onClick={toggleCollapsed}>
-        {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-      </div>
       <Space>
+        <div onClick={toggleCollapsed}>
+          {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        </div>
         <Breadcrumb items={breadList} />
       </Space>
       <Space>

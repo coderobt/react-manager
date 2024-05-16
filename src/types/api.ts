@@ -25,6 +25,7 @@ export interface LoginParams {
   userPwd: string
 }
 
+//用户管理
 export namespace User {
   export interface Params extends PageParams {
     userId?: string
@@ -61,6 +62,23 @@ export namespace User {
 
   export interface EditParam extends CreateParam {
     userId: number
+  }
+}
+
+//部门管理
+export namespace Dept {
+  export interface Params {
+    deptName?: string
+  }
+
+  export interface DeptItem {
+    _id: string
+    createTime: string
+    updateTime: string
+    deptName: string
+    userName: string
+    parentId: string
+    children: DeptItem[]
   }
 }
 
