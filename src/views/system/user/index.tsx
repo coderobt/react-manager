@@ -7,40 +7,41 @@ import dayjs from 'dayjs'
 import CreateUser from './CreateUser'
 import { IAction } from '@/types/modal'
 import { message } from '@/utils/AntdGlobal'
+import { useAntdTable } from 'ahooks'
 
 export default function UserList() {
-  const [data, setData] = useState<User.UserItem[]>([])
+  // const [data, setData] = useState<User.UserItem[]>([])
   const [form] = Form.useForm()
-  const [total, setTotal] = useState(0)
+  // const [total, setTotal] = useState(0)
   const [userIds, setUserIds] = useState<number[]>([])
-  const userRef = useRef<{ open: (type: IAction, data?: User.UserItem) => void | undefined }>()
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 10
-  })
+  const userRef = useRef<{ open: (type: IAction, data?: User.UserItem) => void }>()
+  // const [pagination, setPagination] = useState({
+  //   current: 1,
+  //   pageSize: 10
+  // })
 
-  useEffect(() => {
-    getUserListData({
-      pageNum: pagination.current,
-      pageSize: pagination.pageSize
-    })
-  }, [pagination.current, pagination.pageSize])
+  // useEffect(() => {
+  //   getUserListData({
+  //     pageNum: pagination.current,
+  //     pageSize: pagination.pageSize
+  //   })
+  // }, [pagination.current, pagination.pageSize])
 
   //获取用户列表
-  const getUserListData = async (params: PageParams) => {
-    const values = form.getFieldsValue()
-    const data = await getUserList({
-      ...values,
-      pageNum: params.pageNum,
-      pageSize: params.pageSize
-    })
-    setData(data.list)
-    setTotal(data.list.length)
-    setPagination({
-      current: data.page.pageNum,
-      pageSize: data.page.pageSize
-    })
-  }
+  // const getUserListData = async (params: PageParams) => {
+  //   const values = form.getFieldsValue()
+  //   const data = await getUserList({
+  //     ...values,
+  //     pageNum: params.pageNum,
+  //     pageSize: params.pageSize || pagination.pageSize
+  //   })
+  //   setData(data.list)
+  //   setTotal(data.page.total)
+  //   setPagination({
+  //     current: data.page.pageNum,
+  //     pageSize: data.page.pageSize
+  //   })
+  // }
 
   //创建用户
   const handleCreate = () => {
@@ -83,10 +84,11 @@ export default function UserList() {
     await delUserAPI({ userIds: ids })
     message.success('删除成功')
     setUserIds([])
-    getUserListData({
-      pageNum: 1,
-      pageSize: pagination.pageSize
-    })
+    search.reset()
+    // getUserListData({
+    //   pageNum: 1,
+    //   pageSize: pagination.pageSize
+    // })
   }
 
   const columns: ColumnsType<User.UserItem> = [
@@ -157,19 +159,42 @@ export default function UserList() {
   ]
 
   //搜索
-  const handleSearch = () => {
-    const values = form.getFieldsValue()
-    getUserListData({
-      ...values,
-      pageNum: 1,
-      pageSize: pagination.pageSize
+  // const handleSearch = () => {
+  // const values = form.getFieldsValue()
+  // search.submit()
+  // getUserListData({
+  //   ...values,
+  //   pageNum: 1,
+  //   pageSize: pagination.pageSize
+  // })
+  // }
+
+  //重置表单
+  // const handleReset = () => {
+  // form.resetFields()
+  // search.reset()
+  // }
+
+  const getTableData = (
+    { current, pageSize }: { current: number; pageSize: number },
+    formData: User.Params
+  ) => {
+    return getUserList({
+      ...formData,
+      pageNum: current,
+      pageSize: pageSize
+    }).then(data => {
+      return {
+        total: data.page.total,
+        list: data.list
+      }
     })
   }
 
-  //重置表单
-  const handleReset = () => {
-    form.resetFields()
-  }
+  const { tableProps, search } = useAntdTable(getTableData, {
+    form,
+    defaultPageSize: 3
+  })
 
   return (
     <div className='user-list'>
@@ -190,10 +215,10 @@ export default function UserList() {
         </Form.Item>
         <Form.Item>
           <Space>
-            <Button type='primary' onClick={handleSearch}>
+            <Button type='primary' onClick={search.submit}>
               搜素
             </Button>
-            <Button type='primary' onClick={handleReset}>
+            <Button type='primary' onClick={search.reset}>
               重置
             </Button>
           </Space>
@@ -221,37 +246,30 @@ export default function UserList() {
             }
           }}
           bordered
-          dataSource={data}
+          // dataSource={data}
           columns={columns}
-          pagination={{
-            position: ['bottomRight'],
-            current: pagination.current,
-            pageSize: pagination.pageSize,
-            defaultCurrent: 1,
-            total: total,
-            showQuickJumper: true,
-            showSizeChanger: true,
-            showTotal: function (total) {
-              return `共${total}条`
-            },
-            onChange: (page, pageSize) => {
-              setPagination({
-                current: page,
-                pageSize
-              })
-            }
-          }}
+          // pagination={{
+          //   position: ['bottomRight'],
+          //   current: pagination.current,
+          //   pageSize: pagination.pageSize,
+          //   defaultCurrent: 1,
+          //   total: total,
+          //   showQuickJumper: true,
+          //   showSizeChanger: true,
+          //   showTotal: function (total) {
+          //     return `共${total}条`
+          //   },
+          //   onChange: (page, pageSize) => {
+          //     setPagination({
+          //       current: page,
+          //       pageSize
+          //     })
+          //   }
+          // }}
+          {...tableProps}
         />
       </div>
-      <CreateUser
-        mRef={userRef}
-        update={() =>
-          getUserListData({
-            pageNum: 1,
-            pageSize: pagination.pageSize
-          })
-        }
-      />
+      <CreateUser mRef={userRef} update={() => search.reset()} />
     </div>
   )
 }
