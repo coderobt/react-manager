@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { LoginParams, User, Dashboard, ResultData, Dept } from '@/types/api'
+import { LoginParams, User, Dashboard, ResultData, Dept, Menu } from '@/types/api'
 
 //登录
 export const login = (params: LoginParams) => {
@@ -9,6 +9,13 @@ export const login = (params: LoginParams) => {
 // 获取用户信息
 export const getUserInfoData = () => {
   return request.get<User.UserItem>('/users/getUserInfo')
+}
+
+//获取权限列表
+export const getPermissionListAPI = () => {
+  return request.get<{ buttonList: string[]; menuList: Menu.MenuItem[] }>(
+    '/users/getPermissionList'
+  )
 }
 
 // 获取工作台报表
@@ -78,4 +85,24 @@ export const editDeptAPI = (params: Dept.EditParams) => {
 //删除部门
 export const deleteDeptAPI = (params: Dept.DelParams) => {
   return request.post('dept/delete', params)
+}
+
+//菜单管理
+export const getMenuListAPI = (params?: Menu.Params) => {
+  return request.get<Menu.MenuItem[]>('/menu/list', params)
+}
+
+//菜单创建
+export const createMenuAPI = (params: Menu.CreateParams) => {
+  return request.post('/menu/create', params)
+}
+
+//编辑菜单
+export const editMenuAPI = (params: Menu.EditParams) => {
+  return request.post('menu/edit', params)
+}
+
+//删除菜单
+export const delMenuAPI = (params: Menu.DelParams) => {
+  return request.post('menu/delete', params)
 }

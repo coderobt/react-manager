@@ -8,6 +8,8 @@ import Layout from '@/layout'
 import DashBoard from '@/views/dashboard'
 import User from '@/views/system/user'
 import Dept from '@/views/system/dept'
+import Menu from '@/views/system/menu'
+import AuthLoader from './AuthLoader'
 
 const router = createBrowserRouter([
   {
@@ -19,7 +21,9 @@ const router = createBrowserRouter([
     element: <Login />
   },
   {
+    id: 'layout',
     element: <Layout />,
+    loader: AuthLoader,
     children: [
       {
         path: '/welcome',
@@ -36,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: '/deptList',
         element: <Dept />
+      },
+      {
+        path: '/menuList',
+        element: <Menu />
       }
     ]
   },
