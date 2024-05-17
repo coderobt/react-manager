@@ -1,9 +1,8 @@
 import { Menu } from 'antd'
-import { DesktopOutlined, SettingOutlined, TeamOutlined } from '@ant-design/icons'
 import styles from './index.module.less'
-import { useNavigate, useRouteLoaderData } from 'react-router-dom'
+import { useNavigate, useRouteLoaderData, useLocation } from 'react-router-dom'
 import { useUserStore } from '@/store'
-import type { MenuProps, MenuTheme } from 'antd/es/menu'
+import type { MenuProps } from 'antd/es/menu'
 import React, { useEffect, useState } from 'react'
 import { Menu as IMenu } from '@/types/api'
 import * as Icons from '@ant-design/icons'
@@ -12,15 +11,20 @@ type MenuItem = Required<MenuProps>['items'][number]
 
 const SideMenu = () => {
   const [menuList, setMenuList] = useState<MenuItem[]>([])
+  const [selectedKeys, setSelectedKeys] = useState<string[]>(['params'])
   const collapsed = useUserStore(state => state.collapsed)
   const nav = useNavigate()
-  const handleClick = () => {
+  const params = useLocation()
+  console.log(params)
+
+  //Logo点击
+  const handleClickLogo = () => {
     nav('/welcome')
   }
 
   //优先加载load
   const data: any = useRouteLoaderData('layout')
-  console.log('data', data)
+  // console.log('data', data)
 
   // const items = [
   //   {
@@ -115,17 +119,25 @@ const SideMenu = () => {
   useEffect(() => {
     const treeMenuList = getTreeMenu(data.menuList)
     setMenuList(treeMenuList)
+    setSelectedKeys([params.pathname])
   }, [])
+
+  //菜单点击
+  const handleClickMenu = ({ key }: { key: string }) => {
+    setSelectedKeys([key])
+    nav(key)
+  }
 
   return (
     <div>
-      <div className={styles.logo} onClick={handleClick}>
+      <div className={styles.logo} onClick={handleClickLogo}>
         <img src='/imgs/logo.png' className={styles.img} />
         {collapsed ? '' : <span className={styles['logo-text']}>暮暮货物</span>}
       </div>
       <Menu
+        selectedKeys={selectedKeys}
+        onClick={handleClickMenu}
         style={{ width: collapsed ? 80 : 'auto' }}
-        defaultSelectedKeys={['1']}
         mode='inline'
         theme='dark'
         items={menuList}
