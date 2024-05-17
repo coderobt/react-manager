@@ -89,7 +89,7 @@ const SideMenu = () => {
   //递归生成菜单
   const getTreeMenu = (menuList: IMenu.MenuItem[], treeList: MenuItem[] = []) => {
     menuList.forEach((item, index) => {
-      if (item.menuType === 1) {
+      if (item.menuType === 1 && item.menuState === 1) {
         if (item.buttons) {
           treeList.push(getItem(item.menuName, item.path || index, addIcon(item.menuName)))
         } else {
