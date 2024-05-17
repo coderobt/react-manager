@@ -28,7 +28,7 @@ export const formatState = (state: number) => {
   if (state === 3) return '离职'
 }
 
-// 获取页面路径，用到了递归生成路径 数组转化成树
+// 获取页面路径
 export const getMenuPath = (list: Menu.MenuItem[]): string[] => {
   return list.reduce((result: string[], item: Menu.MenuItem) => {
     return result.concat(

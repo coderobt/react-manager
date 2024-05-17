@@ -2,7 +2,7 @@ import React from 'react'
 import { Layout, Watermark } from 'antd'
 import NavHeader from '@/components/NavHeader'
 import Menu from '@/components/Menu'
-import { Outlet, useRouteLoaderData } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import styles from './index.module.less'
 import { getUserInfoData } from '@/api'
 import { useEffect } from 'react'
@@ -21,10 +21,6 @@ const App: React.FC = () => {
     const data = await getUserInfoData()
     updateUserInfo(data)
   }
-
-  //优先加载load
-  const data = useRouteLoaderData('layout')
-  console.log('data', data)
 
   return (
     <Watermark content='react'>
