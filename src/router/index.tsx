@@ -10,6 +10,7 @@ import User from '@/views/system/user'
 import Dept from '@/views/system/dept'
 import Menu from '@/views/system/menu'
 import AuthLoader from './AuthLoader'
+import Role from '@/views/system/role'
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: '/menuList',
         element: <Menu />
+      },
+      {
+        path: '/roleList',
+        element: <Role />
       }
     ]
   },

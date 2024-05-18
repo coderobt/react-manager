@@ -15,7 +15,7 @@ const SideMenu = () => {
   const collapsed = useUserStore(state => state.collapsed)
   const nav = useNavigate()
   const params = useLocation()
-  console.log(params)
+  // console.log(params)
 
   //Logo点击
   const handleClickLogo = () => {

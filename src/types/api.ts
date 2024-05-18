@@ -133,6 +133,31 @@ export namespace Menu {
   }
 }
 
+//角色管理
+export namespace Role {
+  export interface Params extends PageParams {
+    roleName?: string
+  }
+
+  export interface CreateParams {
+    roleName: string
+    remark?: string
+  }
+
+  export interface RoleItem extends CreateParams {
+    _id: string
+    permissionList: {
+      checkedKeys: string[]
+    }
+    createTime: string
+    updateTime: string
+  }
+
+  export interface EditParam extends CreateParams {
+    _id: string
+  }
+}
+
 export namespace Dashboard {
   export interface ReportData {
     driverCount: number
