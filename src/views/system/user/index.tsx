@@ -8,6 +8,7 @@ import CreateUser from './CreateUser'
 import { IAction } from '@/types/modal'
 import { message } from '@/utils/AntdGlobal'
 import { useAntdTable } from 'ahooks'
+import AuthButton from '@/components/AuthButton/AuthButton'
 
 export default function UserList() {
   // const [data, setData] = useState<User.UserItem[]>([])
@@ -228,9 +229,9 @@ export default function UserList() {
         <div className='header-wrapper'>
           <div className='title'>用户列表</div>
           <div className='action'>
-            <Button type='primary' onClick={handleCreate}>
+            <AuthButton auth='user@create' type='primary' onClick={handleCreate}>
               新增
-            </Button>
+            </AuthButton>
             <Button onClick={handlePatchConfirm} type='primary' danger>
               批量删除
             </Button>
