@@ -148,6 +148,7 @@ export namespace Role {
     _id: string
     permissionList: {
       checkedKeys: string[]
+      halfCheckedKeys: string[]
     }
     createTime: string
     updateTime: string
@@ -155,6 +156,18 @@ export namespace Role {
 
   export interface EditParam extends CreateParams {
     _id: string
+  }
+
+  export interface DelParams {
+    _id: string
+  }
+
+  export interface Permission {
+    _id: string
+    permissionList: {
+      checkedKeys: string[]
+      halfCheckedKeys: string[]
+    }
   }
 }
 

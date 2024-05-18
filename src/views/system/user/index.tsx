@@ -193,7 +193,7 @@ export default function UserList() {
 
   const { tableProps, search } = useAntdTable(getTableData, {
     form,
-    defaultPageSize: 3
+    defaultPageSize: 10
   })
 
   return (

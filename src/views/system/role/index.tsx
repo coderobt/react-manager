@@ -1,16 +1,22 @@
-import { Button, Table, Form, Input, Space } from 'antd'
+import { Button, Table, Form, Input, Space, Modal } from 'antd'
 import { useAntdTable } from 'ahooks'
 import dayjs from 'dayjs'
-import { getRoleListAPI } from '@/api/roleApi'
+import { getRoleListAPI, delRoleAPI } from '@/api/roleApi'
 import { Role } from '@/types/api'
 import CreateRole from './CreateRole'
+import SetPermission from './SetPermission'
 import { useRef } from 'react'
 import { IAction } from '@/types/modal'
 import { ColumnsType } from 'antd/es/table'
+import { message } from '@/utils/AntdGlobal'
 
 const RoleList = () => {
   const [form] = Form.useForm()
   const roleRef = useRef<{
+    open: (type: IAction, data?: Role.RoleItem) => void
+  }>()
+
+  const permissionRef = useRef<{
     open: (type: IAction, data?: Role.RoleItem) => void
   }>()
 
@@ -71,8 +77,10 @@ const RoleList = () => {
             <Button type='text' onClick={() => handleEdit(record)}>
               编辑
             </Button>
-            <Button type='text'>设置权限</Button>
-            <Button type='text' danger>
+            <Button type='text' onClick={() => handleSetPermission(record)}>
+              设置权限
+            </Button>
+            <Button onClick={() => handleDel(record._id)} type='text' danger>
               删除
             </Button>
           </Space>
@@ -89,6 +97,24 @@ const RoleList = () => {
   //编辑角色
   const handleEdit = (data: Role.RoleItem) => {
     roleRef.current?.open('edit', data)
+  }
+
+  //删除角色
+  const handleDel = (id: string) => {
+    Modal.confirm({
+      title: '确认',
+      content: <span>确认删除该角色嘛？</span>,
+      async onOk() {
+        await delRoleAPI({ _id: id })
+        message.success('删除成功')
+        search.submit()
+      }
+    })
+  }
+
+  //设置权限
+  const handleSetPermission = (record: Role.RoleItem) => {
+    permissionRef.current?.open('edit', record)
   }
 
   return (
@@ -119,7 +145,10 @@ const RoleList = () => {
         </div>
         <Table rowKey='_id' bordered columns={columns} {...tableProps} />
       </div>
+      {/* 创建角色 */}
       <CreateRole mRef={roleRef} update={search.submit} />
+      {/* 设置权限 */}
+      <SetPermission mRef={permissionRef} update={search.submit} />
     </div>
   )
 }

@@ -3,11 +3,20 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import styles from './index.module.less'
 import { useUserStore } from '@/store'
+import storage from '@/utils/storage'
+import { useNavigate } from 'react-router-dom'
 
 const NavHeader = () => {
   // const userInfo = useUserStore(state => state.userInfo)
   // const collapsed = useUserStore(state => state.collapsed)
-  const { userInfo, collapsed, updateCollapsed } = useUserStore()
+  const nav = useNavigate()
+  const { userInfo, collapsed, updateCollapsed, token } = useUserStore()
+
+  const handleLogout = () => {
+    storage.remove('token')
+    nav('/login')
+  }
+
   const breadList = [
     {
       title: '首页'
@@ -24,7 +33,7 @@ const NavHeader = () => {
     },
     {
       key: '2',
-      label: '退出'
+      label: <span onClick={handleLogout}>退出</span>
     }
   ]
 
