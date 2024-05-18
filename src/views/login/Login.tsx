@@ -25,7 +25,8 @@ export default function Login() {
       message.success('登录成功')
       const params = new URLSearchParams(location.search)
       setTimeout(() => {
-        nav(params.get('callback') || '/')
+        // nav(params.get('callback') || '/')
+        nav('/')
       }, 1000)
     } catch {
       setLoading(false)

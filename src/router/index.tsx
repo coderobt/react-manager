@@ -1,5 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
-import { Navigate } from 'react-router'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Login from '@/views/login/Login'
 import Welcome from '@/views/welcome'
 import Error404 from '@/views/404'
@@ -15,7 +14,7 @@ import Role from '@/views/system/role'
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to='/welcome'></Navigate>
+    element: <Navigate to='/welcome' />
   },
   {
     path: '/login',

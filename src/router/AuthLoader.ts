@@ -1,5 +1,12 @@
 import { getPermissionListAPI } from '@/api'
 import { getMenuPath } from '@/utils'
+import { Menu } from '@/types/api'
+
+export interface IAuthLoader {
+  buttonList: string[]
+  menuList: Menu.MenuItem[]
+  menuPathList: string[]
+}
 
 const AuthLoader = async () => {
   const data = await getPermissionListAPI()

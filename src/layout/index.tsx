@@ -2,16 +2,19 @@ import React from 'react'
 import { Layout, Watermark } from 'antd'
 import NavHeader from '@/components/NavHeader'
 import Menu from '@/components/Menu'
-import { Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useRouteLoaderData } from 'react-router-dom'
 import styles from './index.module.less'
 import { getUserInfoData } from '@/api'
 import { useEffect } from 'react'
 import { useUserStore } from '@/store'
+import { IAuthLoader } from '@/router/AuthLoader'
+import { useLocation } from 'react-router-dom'
 
-const { Content, Footer, Sider } = Layout
+const { Footer, Sider } = Layout
 
 const App: React.FC = () => {
   const { updateUserInfo, collapsed } = useUserStore()
+  const { pathname } = useLocation()
 
   useEffect(() => {
     getUserInfo()
@@ -22,6 +25,12 @@ const App: React.FC = () => {
     updateUserInfo(data)
   }
 
+  //页面权限判断
+  const data = useRouteLoaderData('layout') as IAuthLoader
+  const staticPath = ['/welcome', '/403', '/404']
+  if (!data.menuPathList.includes(pathname) && !staticPath.includes(pathname)) {
+    return <Navigate to='/403' />
+  }
   return (
     <Watermark content='react'>
       <Layout>
