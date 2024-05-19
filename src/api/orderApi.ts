@@ -20,3 +20,8 @@ export const getVehicleListAPI = () => {
 export const createOrderAPI = (params: Order.CreateParams) => {
   return request.post('/order/create', params)
 }
+
+//获取订单详情
+export const getOrderDetailAPI = (orderId: string) => {
+  return request.get<Order.OrderItem>(`/order/detail/${orderId}`)
+}

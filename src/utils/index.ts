@@ -4,7 +4,6 @@
  */
 
 import { Menu } from '@/types/api'
-import { it } from 'node:test'
 
 //格式化金额
 export const formatMoney = (num?: number | string) => {
@@ -35,4 +34,10 @@ export const getMenuPath = (list: Menu.MenuItem[]): string[] => {
       Array.isArray(item.children) && !item.buttons ? getMenuPath(item.children) : item.path + ''
     )
   }, [])
+}
+
+//手机号加密 运用正则表达式
+export const formatPhone = (phone?: number | string) => {
+  if (!phone) return '-'
+  return phone.toString().replace(/(\d{3})\d*(\d{4})/, '$1****$2')
 }

@@ -6,12 +6,17 @@ import { Order } from '@/types/api'
 import { getOrderListAPI } from '@/api/orderApi'
 import { useRef } from 'react'
 import CreateOrder from './components/CreateOrder'
+import OrderDetail from './components/OrderDetail'
 
 const OrderList = () => {
   const [form] = Form.useForm()
   const orderRef = useRef<{
     open: () => void
   }>()
+  const detailRef = useRef<{
+    open: (orderId: string) => void
+  }>()
+
   const getTableData = (
     { current, pageSize }: { current: number; pageSize: number },
     formData: Order.SearchParams
@@ -97,7 +102,9 @@ const OrderList = () => {
       render(_, record) {
         return (
           <Space>
-            <Button type='text'>详情</Button>
+            <Button type='text' onClick={() => handleDetail(record.orderId)}>
+              详情
+            </Button>
             <Button type='text'>打点</Button>
             <Button type='text'>轨迹</Button>
             <Button type='text' danger>
@@ -112,6 +119,10 @@ const OrderList = () => {
   //创建订单
   const handleCreate = () => {
     orderRef.current?.open()
+  }
+
+  const handleDetail = (orderId: string) => {
+    detailRef.current?.open(orderId)
   }
 
   return (
@@ -151,10 +162,12 @@ const OrderList = () => {
             </Button>
           </div>
         </div>
-        <Table rowKey='userId' bordered columns={columns} {...tableProps} />
+        <Table rowKey='_id' bordered columns={columns} {...tableProps} />
       </div>
       {/* 创建订单组件 */}
       <CreateOrder mRef={orderRef} update={search.submit} />
+      {/* 订单详情 */}
+      <OrderDetail mRef={detailRef} />
     </div>
   )
 }
