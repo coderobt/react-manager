@@ -10,6 +10,7 @@ import Dept from '@/views/system/dept'
 import Menu from '@/views/system/menu'
 import AuthLoader from './AuthLoader'
 import Role from '@/views/system/role'
+import OrderList from '@/views/order/OrderList'
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: '/roleList',
         element: <Role />
+      },
+      {
+        path: '/orderList',
+        element: <OrderList />
       }
     ]
   },
