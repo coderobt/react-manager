@@ -7,6 +7,7 @@ import { getOrderListAPI } from '@/api/orderApi'
 import { useRef } from 'react'
 import CreateOrder from './components/CreateOrder'
 import OrderDetail from './components/OrderDetail'
+import OrderMarker from './components/OrderMarker'
 
 const OrderList = () => {
   const [form] = Form.useForm()
@@ -14,6 +15,9 @@ const OrderList = () => {
     open: () => void
   }>()
   const detailRef = useRef<{
+    open: (orderId: string) => void
+  }>()
+  const markerRef = useRef<{
     open: (orderId: string) => void
   }>()
 
@@ -105,7 +109,9 @@ const OrderList = () => {
             <Button type='text' onClick={() => handleDetail(record.orderId)}>
               详情
             </Button>
-            <Button type='text'>打点</Button>
+            <Button type='text' onClick={() => handleMarker(record.orderId)}>
+              打点
+            </Button>
             <Button type='text'>轨迹</Button>
             <Button type='text' danger>
               删除
@@ -123,6 +129,11 @@ const OrderList = () => {
 
   const handleDetail = (orderId: string) => {
     detailRef.current?.open(orderId)
+  }
+
+  //地图打点
+  const handleMarker = (orderId: string) => {
+    markerRef.current?.open(orderId)
   }
 
   return (
@@ -168,6 +179,8 @@ const OrderList = () => {
       <CreateOrder mRef={orderRef} update={search.submit} />
       {/* 订单详情 */}
       <OrderDetail mRef={detailRef} />
+      {/* 地图打点 */}
+      <OrderMarker mRef={markerRef} />
     </div>
   )
 }

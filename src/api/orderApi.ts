@@ -25,3 +25,8 @@ export const createOrderAPI = (params: Order.CreateParams) => {
 export const getOrderDetailAPI = (orderId: string) => {
   return request.get<Order.OrderItem>(`/order/detail/${orderId}`)
 }
+
+//更新订单信息
+export const updateOderInfoAPI = (params: Order.OrderRoute) => {
+  return request.post('/order/edit', params)
+}

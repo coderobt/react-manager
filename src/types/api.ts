@@ -225,6 +225,11 @@ export namespace Order {
     id: string
     name: string
   }
+
+  export interface OrderRoute {
+    orderId: string //订单ID
+    route: Array<{ lng: string; lat: string }>
+  }
 }
 
 export namespace Dashboard {
