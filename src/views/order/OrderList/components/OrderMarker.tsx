@@ -4,7 +4,6 @@ import { useImperativeHandle, useState } from 'react'
 import { getOrderDetailAPI, updateOderInfoAPI } from '@/api/orderApi'
 import { Order } from '@/types/api'
 import { message } from '@/utils/AntdGlobal'
-import { flushSync } from 'react-dom'
 
 const OrderMarker = (props: IDetailProp) => {
   const [visible, setVisible] = useState(false)
@@ -62,11 +61,12 @@ const OrderMarker = (props: IDetailProp) => {
         map.removeOverlay(marker)
         const index = markers.findIndex(item => item.id === marker.id)
         markers.splice(index, 1)
-        setMarkers(markers)
+        setMarkers([...markers])
         // const newArr = markers.filter(item => item.id !== markerItem.id)
         // setMarkers(newArr)
       })
     )
+    setMarkers([...markers])
     marker.addContextMenu(markerMenu)
     map.addOverlay(marker)
   }

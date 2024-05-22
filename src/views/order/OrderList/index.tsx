@@ -8,6 +8,7 @@ import { useRef } from 'react'
 import CreateOrder from './components/CreateOrder'
 import OrderDetail from './components/OrderDetail'
 import OrderMarker from './components/OrderMarker'
+import OrderRoute from './components/OrderRoute'
 
 const OrderList = () => {
   const [form] = Form.useForm()
@@ -18,6 +19,9 @@ const OrderList = () => {
     open: (orderId: string) => void
   }>()
   const markerRef = useRef<{
+    open: (orderId: string) => void
+  }>()
+  const routeRef = useRef<{
     open: (orderId: string) => void
   }>()
 
@@ -112,7 +116,9 @@ const OrderList = () => {
             <Button type='text' onClick={() => handleMarker(record.orderId)}>
               打点
             </Button>
-            <Button type='text'>轨迹</Button>
+            <Button type='text' onClick={() => handleRoute(record.orderId)}>
+              轨迹
+            </Button>
             <Button type='text' danger>
               删除
             </Button>
@@ -134,6 +140,11 @@ const OrderList = () => {
   //地图打点
   const handleMarker = (orderId: string) => {
     markerRef.current?.open(orderId)
+  }
+
+  //行驶轨迹
+  const handleRoute = (orderId: string) => {
+    routeRef.current?.open(orderId)
   }
 
   return (
@@ -181,6 +192,8 @@ const OrderList = () => {
       <OrderDetail mRef={detailRef} />
       {/* 地图打点 */}
       <OrderMarker mRef={markerRef} />
+      {/* 行驶轨迹 */}
+      <OrderRoute mRef={routeRef} />
     </div>
   )
 }
