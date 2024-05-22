@@ -84,6 +84,8 @@ const OrderMarker = (props: IDetailProp) => {
   //关闭弹框
   const handleCancel = () => {
     setVisible(false)
+    //每次关闭弹框需要清除缓存否则一个点需要删除多次才能删除
+    setMarkers([])
   }
 
   return (

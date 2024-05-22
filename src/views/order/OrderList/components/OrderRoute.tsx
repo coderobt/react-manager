@@ -7,6 +7,9 @@ import { Order } from '@/types/api'
 
 const OrderRoute = (props: IDetailProp) => {
   const [visible, setVisible] = useState(false)
+  const [trackAni, setTrackAni] = useState<{
+    cancel: () => void
+  }>()
 
   useImperativeHandle(props.mRef, () => ({
     open
@@ -49,11 +52,14 @@ const OrderRoute = (props: IDetailProp) => {
         delay: 300
       })
       trackAni.start()
+      setTrackAni(trackAni)
     }
   }
 
+  //关闭弹框
   const handleCancel = () => {
     setVisible(false)
+    trackAni?.cancel()
   }
 
   return (
