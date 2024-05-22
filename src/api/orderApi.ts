@@ -30,3 +30,13 @@ export const getOrderDetailAPI = (orderId: string) => {
 export const updateOderInfoAPI = (params: Order.OrderRoute) => {
   return request.post('/order/edit', params)
 }
+
+//删除订单
+export const delOrderAPI = (orderId: string) => {
+  return request.post('/order/delete', { _id: orderId })
+}
+
+//导出接口
+export const exportData = (params: Order.SearchParams) => {
+  return request.downloadFile('/order/orderExport', params, '订单列表.xlsx')
+}

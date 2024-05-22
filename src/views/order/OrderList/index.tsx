@@ -1,9 +1,9 @@
-import { Button, Table, Form, Input, Select, Space } from 'antd'
+import { Button, Table, Form, Input, Select, Space, Modal, message } from 'antd'
 import { useAntdTable } from 'ahooks'
 import dayjs from 'dayjs'
 import { ColumnsType } from 'antd/es/table'
 import { Order } from '@/types/api'
-import { getOrderListAPI } from '@/api/orderApi'
+import { getOrderListAPI, delOrderAPI, exportData } from '@/api/orderApi'
 import { useRef } from 'react'
 import CreateOrder from './components/CreateOrder'
 import OrderDetail from './components/OrderDetail'
@@ -119,7 +119,7 @@ const OrderList = () => {
             <Button type='text' onClick={() => handleRoute(record.orderId)}>
               轨迹
             </Button>
-            <Button type='text' danger>
+            <Button type='text' danger onClick={() => handleDel(record._id)}>
               删除
             </Button>
           </Space>
@@ -145,6 +145,24 @@ const OrderList = () => {
   //行驶轨迹
   const handleRoute = (orderId: string) => {
     routeRef.current?.open(orderId)
+  }
+
+  //删除确认
+  const handleDel = (_id: string) => {
+    Modal.confirm({
+      title: '确认',
+      content: <span>确认删除订单嘛?</span>,
+      onOk: async () => {
+        await delOrderAPI(_id)
+        message.success('删除成功')
+        search.submit()
+      }
+    })
+  }
+
+  //文件导出
+  const handleExport = async () => {
+    await exportData(form.getFieldsValue())
   }
 
   return (
@@ -181,6 +199,9 @@ const OrderList = () => {
           <div className='action'>
             <Button type='primary' onClick={handleCreate}>
               新增
+            </Button>
+            <Button type='primary' onClick={handleExport}>
+              导出
             </Button>
           </div>
         </div>
