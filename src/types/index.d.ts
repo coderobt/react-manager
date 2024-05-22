@@ -3,4 +3,5 @@ interface Window {
     [propName: string]: any
   }
   BMapGLLib: any
+  BMapLib: any
 }

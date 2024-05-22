@@ -11,6 +11,7 @@ import Menu from '@/views/system/menu'
 import AuthLoader from './AuthLoader'
 import Role from '@/views/system/role'
 import OrderList from '@/views/order/OrderList'
+import OrderCluster from '@/views/order/OrderCluster'
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: '/orderList',
         element: <OrderList />
+      },
+      {
+        path: '/cluster',
+        element: <OrderCluster />
       }
     ]
   },
