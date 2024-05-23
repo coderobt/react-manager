@@ -36,6 +36,18 @@ export const getMenuPath = (list: Menu.MenuItem[]): string[] => {
   }, [])
 }
 
+//递归获取路由对象
+export const searchRoute = (path: string, routes: any = []): any => {
+  for (const item of routes) {
+    if (item.path === path) return item
+    if (item.children) {
+      const result = searchRoute(path, item.children)
+      if (result) return result
+    }
+  }
+  return ''
+}
+
 //手机号加密 运用正则表达式
 export const formatPhone = (phone?: number | string) => {
   if (!phone) return '-'
