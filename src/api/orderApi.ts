@@ -45,3 +45,8 @@ export const exportData = (params: Order.SearchParams) => {
 export const getCityDataAPI = (cityId: number) => {
   return request.get<Array<{ lng: string; lat: string }>>(`/order/cluster/${cityId}`)
 }
+
+//获取司机列表
+export const getDriverListAPI = (params: Order.DriverParams) => {
+  return request.get<ResultData<Order.DriverItem>>('/order/driver/list', params)
+}
