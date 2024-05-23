@@ -41,3 +41,22 @@ export const formatPhone = (phone?: number | string) => {
   if (!phone) return '-'
   return phone.toString().replace(/(\d{3})\d*(\d{4})/, '$1****$2')
 }
+
+//递归查找树的路径从父级到子级
+export const findTreeNode = (tree: Menu.MenuItem[], pathName: string, path: string[]): string[] => {
+  if (!tree) return []
+  for (const data of tree) {
+    path.push(data.menuName)
+    if (data.path === pathName) {
+      return path
+    }
+    if (data.children?.length) {
+      const findChildren = findTreeNode(data.children, pathName, path)
+      if (findChildren?.length) {
+        return path
+      }
+    }
+    path.pop()
+  }
+  return []
+}

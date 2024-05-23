@@ -1,11 +1,11 @@
-import { Breadcrumb, Space, Switch, Dropdown } from 'antd'
+import { Space, Switch, Dropdown } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import styles from './index.module.less'
 import { useUserStore } from '@/store'
 import storage from '@/utils/storage'
 import { useNavigate } from 'react-router-dom'
-
+import BreadCrumb from './BreadCrumb'
 const NavHeader = () => {
   // const userInfo = useUserStore(state => state.userInfo)
   // const collapsed = useUserStore(state => state.collapsed)
@@ -16,15 +16,6 @@ const NavHeader = () => {
     storage.remove('token')
     nav('/login')
   }
-
-  const breadList = [
-    {
-      title: '首页'
-    },
-    {
-      title: '工作台'
-    }
-  ]
 
   const items: MenuProps['items'] = [
     {
@@ -48,7 +39,7 @@ const NavHeader = () => {
         <div onClick={toggleCollapsed}>
           {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </div>
-        <Breadcrumb items={breadList} />
+        <BreadCrumb />
       </Space>
       <Space>
         <Switch checkedChildren='暗黑' unCheckedChildren='默认' />
