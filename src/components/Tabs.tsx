@@ -47,7 +47,7 @@ const TabsFC = () => {
     nav(path)
   }
 
-  //
+  //删除标签
   const handleDel = (path: string) => {
     if (pathname === path) {
       tabsList.forEach((item, index: number) => {
